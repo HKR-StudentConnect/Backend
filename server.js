@@ -1,5 +1,3 @@
-//backend/index.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -8,24 +6,23 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const adminRoutes = require('./routes/adminRoutes'); // Make sure this is included
 
 dotenv.config();
 const app = express();
-app.use(helmet());  // for some basic security best practices
-app.use(cors());    // Enable CORS
+app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
-// Define a simple root route
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/admin', adminRoutes);
+
 app.get('/', (req, res) => {
     res.send('Welcome to the StudentConnect API!');
 });
 
-// Use routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
-
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));

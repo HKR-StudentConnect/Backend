@@ -1,4 +1,4 @@
-//backend/models/posts.js
+// File path: backend/models/posts.js
 
 const mongoose = require('mongoose');
 
@@ -7,8 +7,8 @@ const postSchema = new mongoose.Schema({
   content: {
     text: String,
     media: {
-      images: [String],
-      videos: [String]
+      images: [Buffer],
+      videos: [Buffer]
     }
   },
   likes: [{

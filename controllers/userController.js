@@ -62,15 +62,33 @@ exports.deleteUserProfile = async (req, res) => {
 
 
 exports.suspendUser = async (req, res) => {
-    const { userId } = req.params;
-    const user = await User.findByIdAndUpdate(userId, { suspended: true });
-    if (!user) return res.status(404).send('User not found');
-    res.send('User suspended');
-  };
+    const { userId, period } = req.body;  // Period in days
+    try {
+        const suspensionEnd = new Date();
+        suspensionEnd.setDate(suspensionEnd.getDate() + period);
+        await User.findByIdAndUpdate(userId, { suspended: true, suspensionEnd });
+        res.send(`User suspended for ${period} days`);
+    } catch (error) {
+        res.status(500).send('Error suspending user');
+    }
+};
+
   
   exports.deleteUser = async (req, res) => {
     const { userId } = req.params;
     await User.findByIdAndDelete(userId);
     res.send('User deleted');
   };
+
+  exports.getDashboardStats = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const onlineUsers = await User.countDocuments({ online: true });  // Assuming there's a field to track online status
+        res.json({ totalUsers, onlineUsers });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
   

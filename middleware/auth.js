@@ -2,7 +2,10 @@
 const jwt = require('jsonwebtoken');
 
 exports.verifyToken = (req, res, next) => {
-  const token = req.headers['authorization'];
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) return res.status(401).send('Access denied. No token provided.');
+  
+  const token = authHeader.split(' ')[1]; // Split the 'Bearer token_value'
   if (!token) return res.status(401).send('Access denied. No token provided.');
 
   try {
@@ -10,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (ex) {
-    res.status(400).send('Invalid token.');
+    res.status(400).send(ex);
   }
 };
 

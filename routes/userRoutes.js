@@ -12,3 +12,4 @@ router.put('/:userId', verifyToken, updateUserProfile); // Update a specific use
 router.delete('/:userId', verifyToken, deleteUserProfile); // Delete a specific user profile
 
 module.exports = router;
+

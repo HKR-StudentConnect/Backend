@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 
 exports.register = async (req, res) => {
-  const { username, email, phoneNumber, password, role } = req.body; // include 'role' to specify user or admin
+  const { username, email, phoneNumber, password, role } = req.body; // role is included in the request
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
       email,
       phoneNumber,
       hashedPassword,
-      role
+      role  // Save the role as specified in the request
     });
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully' });
@@ -21,6 +21,7 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 exports.login = async (req, res) => {
