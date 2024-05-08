@@ -73,4 +73,62 @@ exports.suspendUser = async (req, res) => {
     await User.findByIdAndDelete(userId);
     res.send('User deleted');
   };
+
+  exports.getfollowers = async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await User.findById(userId).populate('followers', 'username ');
+      res.status(200).json({ followers: user.followers }); // Corrected typo here
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Could not fetch the users' }); // Corrected message here
+    }
+  };
+  
+  exports.followUser = async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { followerId } = req.body; // Use req.body to get followerId
+  
+      const userActive = await User.findById(userId);
+      if (!userActive) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Check if the followerId is already in the followers array
+      if (!userActive.followers.includes(followerId)) {
+        userActive.followers.push(followerId);
+        await userActive.save();
+      }
+  
+      res.status(200).json({ message: 'Followed' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Could not follow the user' });
+    }
+  };
+  
+
+  exports.unfollowUser = async (req, res) => {
+    try {
+        const {userId} = req.params;
+        const {followerId} = req.body;
+        const useractive = await User.findById(userId);
+      if (!useractive) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Remove the follower if already following
+      const Index = useractive.followers.indexOf(followerId);
+      if (Index !== -1) {
+        useractive.followers.splice(Index, 1);
+        await useractive.save();
+      }
+  
+      res.status(200).json({ message: 'User unfollowed successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
   
