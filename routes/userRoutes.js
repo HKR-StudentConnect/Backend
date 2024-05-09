@@ -5,10 +5,13 @@ const {
   updateUserProfile,
   createUserProfile,
   deleteUserProfile,
-  getfollowers,
-  unfollowUser,
-  followUser,
 } = require('../controllers/userController')
+const {
+  getUserFollowers,
+  getUserFollows,
+  followUser,
+  unfollowUser,
+} = require('../controllers/followController')
 const { verifyToken } = require('../middleware/auth')
 
 router.post('/', verifyToken, createUserProfile) // Create a new user profile
@@ -16,8 +19,9 @@ router.get('/:userId', verifyToken, getUserProfile) // Get a specific user profi
 router.put('/:userId', verifyToken, updateUserProfile) // Update a specific user profile
 router.delete('/:userId', verifyToken, deleteUserProfile) // Delete a specific user profile
 
-router.get('/:userId/followers', verifyToken, getfollowers) // see followers of the user
-router.post('/:userId/followers', verifyToken, followUser) // add followers
-router.delete('/:userId/followers', verifyToken, unfollowUser) // unfollow
+router.get('/:userId/followers', getUserFollowers) // see followers of the user
+router.get('/:userId/follows', getUserFollows) // see follows of the user
+router.post('/:userId/follow', verifyToken, followUser) // add followers
+router.delete('/:userId/unfollow', verifyToken, unfollowUser) // unfollow
 
 module.exports = router
