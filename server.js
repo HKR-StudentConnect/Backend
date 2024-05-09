@@ -6,6 +6,7 @@ const cors = require('cors')
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const postRoutes = require('./routes/postRoutes')
+const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config()
 const app = express()
@@ -13,15 +14,15 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 
-// Define a simple root route
 app.get('/', (req, res) => {
   res.send('Welcome to the StudentConnect API!')
 })
 
-// Use routes
+// Routes
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/posts', postRoutes)
+app.use('/admin', adminRoutes);
 
 // MongoDB connection
 mongoose

@@ -15,3 +15,4 @@ router.post('/:userId/followers', verifyToken, followUser) // add followers
 router.delete('/:userId/followers', verifyToken, unfollowUser) // unfollow 
 
 module.exports = router;
+

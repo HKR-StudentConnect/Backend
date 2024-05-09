@@ -1,10 +1,12 @@
-//backend/routes/adminRoutes.js
-
 const express = require('express');
 const router = express.Router();
-const { suspendUser, deleteUser } = require('../controllers/userController');
+const { verifyToken, admin } = require('../middleware/auth');
+const userController = require('../controllers/userController');
+const postController = require('../controllers/postController');
 
-router.put('/suspend/:userId', verifyToken, admin, suspendUser);
-router.delete('/delete/:userId', verifyToken, admin, deleteUser);
+router.get('/dashboard-stats', verifyToken, admin, userController.getDashboardStats);
+router.put('/suspend/:userId', verifyToken, admin, userController.suspendUser);
+router.delete('/delete/:userId', verifyToken, admin, userController.deleteUser);
+router.post('/send-notification', verifyToken, admin, postController.sendNotification);
 
 module.exports = router;

@@ -1,4 +1,3 @@
-//backend/middleware/auth.js
 const jwt = require('jsonwebtoken')
 
 exports.verifyToken = (req, res, next) => {
@@ -14,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
     req.user = decoded
     next()
   } catch (ex) {
-    res.status(400).send('Invalid token.')
+    res.status(400).send(ex);
   }
 }
 
