@@ -1,5 +1,3 @@
-//backend/models/adminLog.js
-
 const mongoose = require('mongoose');
 
 const adminLogSchema = new mongoose.Schema({

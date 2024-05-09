@@ -1,5 +1,3 @@
-// File path: backend/middleware/uploadMiddleware.js
-
 const multer = require('multer');
 
 // Storage setup to keep files in memory
