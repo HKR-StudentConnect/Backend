@@ -38,7 +38,7 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )
-    res.json({ message: 'Login successful', token, user: user })
+    res.json({ userId: user._id, token: token })
   } catch (error) {
     console.error('Login error for user:', email, error)
     res.status(500).send(error.message)
