@@ -48,7 +48,15 @@ exports.updatePost = async (req, res) => {
 exports.deletePost = async (req, res) => {
   const { postId } = req.params
   try {
-    await Post.findByIdAndDelete(postId)
+    const deletedPost = await Post.findByIdAndDelete(postId)
+    const user = await User.findById(deletedPost.authorId)
+
+    const postIndex = user.posts.indexOf(postId)
+    if (postIndex !== -1) {
+      user.posts.splice(postIndex, 1)
+      await user.save()
+    }
+
     res.json({ message: 'Post deleted successfully' })
   } catch (error) {
     res.status(500).json({ error: error.message })
