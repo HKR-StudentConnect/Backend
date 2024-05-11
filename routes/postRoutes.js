@@ -4,12 +4,13 @@ const {
   createPost,
   updatePost,
   deletePost,
+  getPost,
 } = require('../controllers/postController')
 const { verifyToken } = require('../middleware/auth')
-const { upload } = require('../middleware/uploadMiddleware')
 
-router.post('/', verifyToken, upload, createPost)
-router.put('/:postId', verifyToken, upload, updatePost)
+router.get('/:postId', getPost)
+router.post('/', verifyToken, createPost)
+router.put('/:postId', verifyToken, updatePost)
 router.delete('/:postId', verifyToken, deletePost)
 
 module.exports = router
