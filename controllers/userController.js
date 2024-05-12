@@ -19,10 +19,26 @@ exports.getUserProfile = async (req, res) => {
   const { userId } = req.params
   try {
     const user = await User.findById(userId)
-    if (!user) return res.status(404).json({ message: 'User not found' })
+      .populate({
+        path: 'followers',
+        model: 'User',
+      })
+      .populate({
+        path: 'follows',
+        model: 'User',
+      })
+      .populate({
+        path: 'posts',
+        model: 'Post',
+      })
+
+    if (!user) {
+      return res.status(404).send('User not found')
+    }
+
     res.json(user)
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).send(error.message)
   }
 }
 
@@ -65,6 +81,29 @@ exports.deleteUserProfile = async (req, res) => {
     res.send('User profile deleted successfully')
   } catch (error) {
     res.status(500).send('Error deleting user profile')
+  }
+}
+
+exports.getUsersByUsername = async (req, res) => {
+  try {
+    const query = req.query.username
+    if (!query) {
+      return res
+        .status(400)
+        .json({ message: 'Username query parameter is required' })
+    }
+
+    const users = await User.find({
+      username: { $regex: query, $options: 'i' },
+    })
+
+    if (!users.length) {
+      return res.status(404).json({ message: 'No users found' })
+    }
+
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message })
   }
 }
 

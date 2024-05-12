@@ -2,13 +2,20 @@ const Post = require('../models/posts')
 const User = require('../models/users')
 
 exports.getPost = async (req, res) => {
-  const { postId } = req.params
   try {
+    const { postId } = req.params
     const post = await Post.findById(postId)
-    if (!post) return res.status(404).json({ message: 'Post not found' })
+      .populate('author')
+      .populate('likes.user')
+      .populate('comments.user')
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' })
+    }
+
     res.json(post)
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ message: 'Server error', error: error.message })
   }
 }
 
@@ -16,7 +23,7 @@ exports.createPost = async (req, res) => {
   const { content } = req.body
   try {
     const newPost = new Post({
-      authorId: req.user.userID,
+      author: req.user.userID,
       content: content,
     })
     await newPost.save()
