@@ -43,7 +43,7 @@ exports.followUser = async (req, res) => {
       await followee.save()
     }
 
-    res.status(200).json({ message: 'User followed successfully' })
+    res.status(200).json(followee)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Could not follow the user' })
@@ -53,15 +53,15 @@ exports.followUser = async (req, res) => {
 exports.unfollowUser = async (req, res) => {
   try {
     const { userId } = req.params
-    const { followeeId } = req.body
+    const { followeeId } = req.query
+
     const user = await User.findById(userId)
     const followee = await User.findById(followeeId)
 
-    if (!user) {
+    if (!user || !followee) {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // Remove the followee if already following
     const followeeIndex = user.follows.indexOf(followeeId)
     if (followeeIndex !== -1) {
       user.follows.splice(followeeIndex, 1)
@@ -74,7 +74,7 @@ exports.unfollowUser = async (req, res) => {
       await followee.save()
     }
 
-    res.status(200).json({ message: 'User unfollowed successfully' })
+    res.status(200).json({ followeeId })
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Internal server error' })
