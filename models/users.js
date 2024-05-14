@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
     }
   },
   profile: {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+    },
     university: String,
     bio: String,
     profilePictureUrl: String,
@@ -25,17 +28,17 @@ const userSchema = new mongoose.Schema({
     privacy: {
       profileVisibleTo: String,
       postsVisibleTo: String,
-      allowFollow: String
+      allowFollow: String,
     },
     notifications: {
       push: Boolean,
-      email: Boolean
-    }
+      email: Boolean,
+    },
   },
   follows: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-  chatSessions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatSession' }]
-});
+  chatSessions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatSession' }],
+})
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema)

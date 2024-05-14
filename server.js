@@ -10,6 +10,8 @@ const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const User = require('./models/users'); // Import User model to update online status
+const adminRoutes = require('./routes/adminRoutes')
+const notifyrouter = require('./routes/notifcations')
 
 dotenv.config();
 const app = express();
@@ -20,10 +22,13 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/posts', postRoutes);
+// Routes
+app.use('/auth', authRoutes)
+app.use('/users', userRoutes)
+app.use('/posts', postRoutes)
 app.use('/chat', chatRoutes);
+app.use('/admin', adminRoutes)
+app.use('/notification',notifyrouter)
 
 // Socket.io for real-time chat
 io.on('connection', (socket) => {

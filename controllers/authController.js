@@ -3,15 +3,12 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/users')
 
 exports.register = async (req, res) => {
-  const { username, email, phoneNumber, password, role } = req.body // include 'role' to specify user or admin
+  const { password } = req.body
   try {
     const hashedPassword = await bcrypt.hash(password, 10)
     const newUser = new User({
-      username,
-      email,
-      phoneNumber,
+      ...req.body,
       hashedPassword,
-      role,
     })
     await newUser.save()
     res.status(201).json({ message: 'User registered successfully' })
@@ -38,7 +35,7 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )
-    res.json({ message: 'Login successful', token, user: user })
+    res.json({ userId: user._id, token: token })
   } catch (error) {
     console.error('Login error for user:', email, error)
     res.status(500).send(error.message)
