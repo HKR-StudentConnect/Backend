@@ -6,6 +6,7 @@ const {
   createUserProfile,
   deleteUserProfile,
   getUsersByUsername,
+  getUserFollowsPosts,
 } = require('../controllers/userController')
 const {
   getUserFollowers,
@@ -26,5 +27,6 @@ router.post('/:userId/follow', verifyToken, followUser) // add followers
 router.delete('/:userId/unfollow', verifyToken, unfollowUser) // unfollow
 
 router.get('/search/user', getUsersByUsername)
+router.get('/:userId/follows/posts', verifyToken, getUserFollowsPosts)
 
 module.exports = router
