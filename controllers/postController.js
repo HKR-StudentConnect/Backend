@@ -84,3 +84,71 @@ exports.sendNotification = async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 }
+
+exports.likePost = async (req, res) => {
+  const { postId } = req.params
+  const { userId } = req.body
+  try {
+    const post = await Post.findById(postId)
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' })
+    }
+    if (post.likes.some(like => like.user.toString() === userId)) {
+      return res.status(400).json({ message: 'User already liked this post' })
+    }
+    post.likes.push({ user: userId })
+    await post.save()
+    res.status(200).json(post)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+exports.unLikePost = async (req, res) => {
+  const { postId } = req.params
+  const { userId } = req.body
+  try {
+    const post = await Post.findById(postId)
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' })
+    }
+    post.likes = post.likes.filter(like => like.user.toString() !== userId)
+    await post.save()
+    res.status(200).json(post)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+exports.addComment = async (req, res) => {
+  const { postId } = req.params
+  const { userId, text } = req.body
+  try {
+    const post = await Post.findById(postId)
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' })
+    }
+    post.comments.push({ user: userId, text, timestamp: new Date() })
+    await post.save()
+    res.status(200).json(post)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+exports.removeComment = async (req, res) => {
+  const { postId, commentId } = req.params
+  try {
+    const post = await Post.findById(postId)
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' })
+    }
+    post.comments = post.comments.filter(
+      comment => comment._id.toString() !== commentId
+    )
+    await post.save()
+    res.status(200).json(post)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}

@@ -1,4 +1,5 @@
 const User = require('../models/users')
+const Post = require('../models/posts')
 
 // Create a new user profile
 exports.createUserProfile = async (req, res) => {
@@ -104,6 +105,28 @@ exports.getUsersByUsername = async (req, res) => {
     res.json(users)
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message })
+  }
+}
+
+exports.getUserFollowsPosts = async (req, res) => {
+  const { userId } = req.params
+  try {
+    const user = await User.findById(userId).populate('follows')
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    const followedUserIds = user.follows.map(followedUser => followedUser._id)
+
+    const posts = await Post.find({ author: { $in: followedUserIds } })
+      .sort({ createdAt: -1 })
+      .populate('author')
+      .populate('likes.user')
+      .populate('comments.user')
+
+    res.status(200).json(posts)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
 }
 
