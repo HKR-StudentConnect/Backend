@@ -12,6 +12,7 @@ const chatRoutes = require('./routes/chatRoutes')
 const User = require('./models/users')
 const adminRoutes = require('./routes/adminRoutes')
 const notifyrouter = require('./routes/notifcations')
+const profilerouter = require('./routes/profille')
 
 dotenv.config()
 const app = express()
@@ -28,6 +29,7 @@ app.use('/users', userRoutes)
 app.use('/posts', postRoutes)
 app.use('/chat', chatRoutes)
 app.use('/admin', adminRoutes)
+<<<<<<< HEAD
 app.use('/notifications', notifyrouter)
 
 // Socket.io for real-time chat
@@ -57,6 +59,10 @@ io.on('connection', socket => {
 app.get('/', (req, res) => {
   res.send('Welcome to StudentConnect!!')
 })
+=======
+app.use('/notification',notifyrouter)
+app.use('/profile',profilerouter)
+>>>>>>> created user profile routes
 
 mongoose
   .connect(process.env.MONGO_URI)
