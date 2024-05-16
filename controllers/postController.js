@@ -128,9 +128,19 @@ exports.addComment = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: 'Post not found' })
     }
-    post.comments.push({ user: userId, text, timestamp: new Date() })
+
+    const newComment = {
+      user: userId,
+      text,
+      timestamp: new Date(),
+    }
+
+    post.comments.push(newComment)
     await post.save()
-    res.status(200).json(post)
+
+    const savedComment = post.comments[post.comments.length - 1]
+
+    res.status(200).json({ commentId: savedComment._id })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
