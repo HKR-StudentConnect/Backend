@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes')
 const postRoutes = require('./routes/postRoutes')
 const adminRoutes = require('./routes/adminRoutes')
 const notifyrouter = require('./routes/notifcations')
+const profilerouter = require('./routes/profille')
 
 dotenv.config()
 const app = express()
@@ -25,6 +26,7 @@ app.use('/users', userRoutes)
 app.use('/posts', postRoutes)
 app.use('/admin', adminRoutes)
 app.use('/notification',notifyrouter)
+app.use('/profile',profilerouter)
 
 // MongoDB connection
 mongoose
