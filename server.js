@@ -61,8 +61,6 @@ app.get('/', (req, res) => {
 })
 =======
 app.use('/notification',notifyrouter)
-app.use('/profile',profilerouter)
->>>>>>> created user profile routes
 
 mongoose
   .connect(process.env.MONGO_URI)
