@@ -7,6 +7,7 @@ const {
   deleteUserProfile,
   getUsersByUsername,
   getUserFollowsPosts,
+  getPublicUserById,
 } = require('../controllers/userController')
 const {
   getUserFollowers,
@@ -20,6 +21,8 @@ router.post('/', verifyToken, createUserProfile) // Create a new user profile
 router.get('/:userId', verifyToken, getUserProfile) // Get a specific user profile
 router.put('/:userId', verifyToken, updateUserProfile) // Update a specific user profile
 router.delete('/:userId', verifyToken, deleteUserProfile) // Delete a specific user profile
+
+router.get('/public/:userId', getPublicUserById)
 
 router.get('/:userId/followers', getUserFollowers) // see followers of the user
 router.get('/:userId/follows', getUserFollows) // see follows of the user

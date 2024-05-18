@@ -20,26 +20,39 @@ exports.getUserProfile = async (req, res) => {
   const { userId } = req.params
   try {
     const user = await User.findById(userId)
-      .populate({
-        path: 'followers',
-        model: 'User',
-      })
-      .populate({
-        path: 'follows',
-        model: 'User',
-      })
-      .populate({
-        path: 'posts',
-        model: 'Post',
-      })
-
     if (!user) {
       return res.status(404).send('User not found')
     }
-
     res.json(user)
   } catch (error) {
     res.status(500).send(error.message)
+  }
+}
+
+exports.getPublicUserById = async (req, res) => {
+  const { userId } = req.params
+  try {
+    const user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    return res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      profile: {
+        name: user.profile.name,
+        profilePictureUrl: user.profile.profilePictureUrl,
+        university: user.profile.university,
+        bio: user.profile.bio,
+        profilePictureUrl: user.profile.profilePictureUrl,
+      },
+      follows: user.follows,
+      followers: user.followers,
+      posts: user.posts,
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Internal Server Error' })
   }
 }
 
@@ -50,10 +63,7 @@ exports.updateUserProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
       new: true,
     })
-    res.json({
-      message: 'Profile updated successfully',
-      userProfile: updatedUser,
-    })
+    res.status(200).json(updatedUser)
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -115,15 +125,10 @@ exports.getUserFollowsPosts = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
-
     const followedUserIds = user.follows.map(followedUser => followedUser._id)
-
-    const posts = await Post.find({ author: { $in: followedUserIds } })
-      .sort({ createdAt: -1 })
-      .populate('author')
-      .populate('likes.user')
-      .populate('comments.user')
-
+    const posts = await Post.find({ authorId: { $in: followedUserIds } }).sort({
+      createdAt: -1,
+    })
     res.status(200).json(posts)
   } catch (error) {
     res.status(500).json({ message: error.message })

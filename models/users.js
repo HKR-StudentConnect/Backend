@@ -5,15 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String, required: true, unique: true },
   hashedPassword: { type: String, required: true },
-  role: { type: String, default: 'user', enum: ['user', 'admin'] }, 
-  onlineStatus: { type: Boolean, default: false }, //added for the online chat feature
-  auth: {
-    mfaEnabled: { type: Boolean, default: false },
-    verification: {
-      emailVerified: { type: Boolean, default: false },
-      phoneVerified: { type: Boolean, default: false }
-    }
-  },
+  role: { type: String, default: 'user', enum: ['user', 'admin'] },
+  onlineStatus: { type: Boolean, default: false },
   profile: {
     name: {
       type: String,
@@ -22,8 +15,7 @@ const userSchema = new mongoose.Schema({
     university: String,
     bio: String,
     profilePictureUrl: String,
-    coverPhotoUrl: String
-  },  
+  },
   settings: {
     privacy: {
       profileVisibleTo: String,

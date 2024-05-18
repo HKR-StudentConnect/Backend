@@ -1,13 +1,21 @@
 const Post = require('../models/posts')
 const User = require('../models/users')
 
+exports.getUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.userId
+    const posts = await Post.find({ authorId: userId }).sort({ createdAt: -1 })
+    res.status(200).json(posts)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Server error' })
+  }
+}
+
 exports.getPost = async (req, res) => {
   try {
     const { postId } = req.params
     const post = await Post.findById(postId)
-      .populate('author')
-      .populate('likes.user')
-      .populate('comments.user')
 
     if (!post) {
       return res.status(404).json({ message: 'Post not found' })
@@ -23,7 +31,7 @@ exports.createPost = async (req, res) => {
   const { content } = req.body
   try {
     const newPost = new Post({
-      author: req.user.userID,
+      authorId: req.user.userID,
       content: content,
     })
     await newPost.save()
@@ -64,7 +72,7 @@ exports.deletePost = async (req, res) => {
       await user.save()
     }
 
-    res.json({ message: 'Post deleted successfully' })
+    res.status(200).json({ message: 'Post deleted successfully' })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -93,10 +101,10 @@ exports.likePost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: 'Post not found' })
     }
-    if (post.likes.some(like => like.user.toString() === userId)) {
+    if (post.likes.some(like => like.userId.toString() === userId)) {
       return res.status(400).json({ message: 'User already liked this post' })
     }
-    post.likes.push({ user: userId })
+    post.likes.push({ userId: userId })
     await post.save()
     res.status(200).json(post)
   } catch (error) {
@@ -112,7 +120,7 @@ exports.unLikePost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: 'Post not found' })
     }
-    post.likes = post.likes.filter(like => like.user.toString() !== userId)
+    post.likes = post.likes.filter(like => like.userId.toString() !== userId)
     await post.save()
     res.status(200).json(post)
   } catch (error) {
@@ -130,17 +138,14 @@ exports.addComment = async (req, res) => {
     }
 
     const newComment = {
-      user: userId,
+      userId: userId,
       text,
       timestamp: new Date(),
     }
 
     post.comments.push(newComment)
     await post.save()
-
-    const savedComment = post.comments[post.comments.length - 1]
-
-    res.status(200).json({ commentId: savedComment._id })
+    res.status(200).json(post)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

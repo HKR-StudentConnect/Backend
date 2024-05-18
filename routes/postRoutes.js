@@ -9,9 +9,11 @@ const {
   unLikePost,
   addComment,
   removeComment,
+  getUserPosts,
 } = require('../controllers/postController')
 const { verifyToken } = require('../middleware/auth')
 
+router.get('/user/:userId', getUserPosts)
 router.get('/:postId', getPost)
 router.post('/', verifyToken, createPost)
 router.put('/:postId', verifyToken, updatePost)
