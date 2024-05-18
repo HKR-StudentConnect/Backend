@@ -63,10 +63,7 @@ exports.updateUserProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
       new: true,
     })
-    res.json({
-      message: 'Profile updated successfully',
-      userProfile: updatedUser,
-    })
+    res.status(200).json(updatedUser)
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
