@@ -72,7 +72,7 @@ exports.deletePost = async (req, res) => {
       await user.save()
     }
 
-    res.json({ message: 'Post deleted successfully' })
+    res.status(200).json({ message: 'Post deleted successfully' })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

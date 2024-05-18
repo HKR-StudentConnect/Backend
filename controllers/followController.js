@@ -43,7 +43,7 @@ exports.followUser = async (req, res) => {
       await followee.save()
     }
 
-    res.status(200).json(followee)
+    res.status(200).json(followee._id)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Could not follow the user' })
@@ -74,7 +74,7 @@ exports.unfollowUser = async (req, res) => {
       await followee.save()
     }
 
-    res.status(200).json({ followeeId })
+    res.status(200).json(followeeId)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Internal server error' })
