@@ -37,11 +37,18 @@ exports.getPublicUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
     return res.status(200).json({
+      _id: user._id,
       username: user.username,
       profile: {
         name: user.profile.name,
         profilePictureUrl: user.profile.profilePictureUrl,
+        university: user.profile.university,
+        bio: user.profile.bio,
+        profilePictureUrl: user.profile.profilePictureUrl,
       },
+      follows: user.follows,
+      followers: user.followers,
+      posts: user.posts,
     })
   } catch (error) {
     console.error(error)
