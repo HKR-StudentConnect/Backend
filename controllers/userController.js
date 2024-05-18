@@ -1,3 +1,4 @@
+//backend/controllers/userController.js
 const User = require('../models/users')
 const Post = require('../models/posts')
 
@@ -130,23 +131,44 @@ exports.getUserFollowsPosts = async (req, res) => {
   }
 }
 
-exports.suspendUser = async (req, res) => {
-  const { userId, period } = req.body // Period in days
+
+exports.getAllUsers = async (req, res) => {
   try {
-    const suspensionEnd = new Date()
-    suspensionEnd.setDate(suspensionEnd.getDate() + period)
-    await User.findByIdAndUpdate(userId, { suspended: true, suspensionEnd })
-    res.send(`User suspended for ${period} days`)
+    const users = await User.find();
+    res.json(users);
   } catch (error) {
-    res.status(500).send('Error suspending user')
+    res.status(500).json({ error: error.message });
   }
-}
+};
+
+exports.suspendUser = async (req, res) => {
+  const { userId } = req.params;
+  const { period } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    user.suspendedUntil = new Date(Date.now() + period * 24 * 60 * 60 * 1000); // Suspend for 'period' days
+    await user.save();
+    res.json({ message: 'User suspended successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 exports.deleteUser = async (req, res) => {
-  const { userId } = req.params
-  await User.findByIdAndDelete(userId)
-  res.send('User deleted')
-}
+  const { userId } = req.params;
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 exports.getDashboardStats = async (req, res) => {
   try {

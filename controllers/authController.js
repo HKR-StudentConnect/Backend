@@ -41,3 +41,48 @@ exports.login = async (req, res) => {
     res.status(500).send(error.message)
   }
 }
+
+
+
+// Admin login function - recently added function
+// backend/controllers/authController.js
+
+// Admin login function
+exports.adminLogin = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    console.log('Admin login attempt:', email); // Debugging log
+
+    const user = await User.findOne({ email, role: 'admin' });
+    if (!user) {
+      console.log('Admin not found or not an admin'); // Debugging log
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.hashedPassword);
+    if (!isMatch) {
+      console.log('Password mismatch'); // Debugging log
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+        role: user.role
+      }
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (error) {
+    console.error('Server error:', error); // Debugging log
+    res.status(500).json({ message: 'Server error' });
+  }
+};
