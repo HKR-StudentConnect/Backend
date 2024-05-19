@@ -8,6 +8,7 @@ const {
   getUsersByUsername,
   getUserFollowsPosts,
   getPublicUserById,
+  getAllUsers,
 } = require('../controllers/userController')
 const {
   getUserFollowers,
@@ -15,8 +16,9 @@ const {
   followUser,
   unfollowUser,
 } = require('../controllers/followController')
-const { verifyToken } = require('../middleware/auth')
+const { verifyToken, admin } = require('../middleware/auth')
 
+router.get('/', verifyToken, admin, getAllUsers)
 router.post('/', verifyToken, createUserProfile) // Create a new user profile
 router.get('/:userId', verifyToken, getUserProfile) // Get a specific user profile
 router.put('/:userId', verifyToken, updateUserProfile) // Update a specific user profile

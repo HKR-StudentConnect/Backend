@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
   chatSessions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatSession' }],
+  suspended: { type: Boolean, default: false },
 })
 
 module.exports = mongoose.model('User', userSchema)

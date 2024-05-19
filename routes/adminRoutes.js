@@ -11,6 +11,12 @@ router.get(
   userController.getDashboardStats
 )
 router.put('/suspend/:userId', verifyToken, admin, userController.suspendUser)
+router.put(
+  '/unsuspend/:userId',
+  verifyToken,
+  admin,
+  userController.unsuspendUser
+)
 router.delete('/delete/:userId', verifyToken, admin, userController.deleteUser)
 router.post(
   '/send-notification',
