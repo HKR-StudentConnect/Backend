@@ -1,6 +1,15 @@
 const Post = require('../models/posts')
 const User = require('../models/users')
 
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find()
+    res.status(200).json(posts)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
 exports.getUserPosts = async (req, res) => {
   try {
     const userId = req.params.userId

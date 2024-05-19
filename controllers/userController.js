@@ -1,6 +1,15 @@
 const User = require('../models/users')
 const Post = require('../models/posts')
 
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ role: { $ne: 'admin' } })
+    res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
 // Create a new user profile
 exports.createUserProfile = async (req, res) => {
   try {
@@ -11,7 +20,7 @@ exports.createUserProfile = async (req, res) => {
       userProfile: newUser,
     })
   } catch (error) {
-    res.status(400).json({ message: error.message })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -136,28 +145,43 @@ exports.getUserFollowsPosts = async (req, res) => {
 }
 
 exports.suspendUser = async (req, res) => {
-  const { userId, period } = req.body // Period in days
+  const { userId } = req.body
   try {
-    const suspensionEnd = new Date()
-    suspensionEnd.setDate(suspensionEnd.getDate() + period)
-    await User.findByIdAndUpdate(userId, { suspended: true, suspensionEnd })
-    res.send(`User suspended for ${period} days`)
+    await User.findByIdAndUpdate(userId, { suspended: true })
+    res.status(200).json({ message: 'User suspended successfully' })
   } catch (error) {
     res.status(500).send('Error suspending user')
+  }
+}
+
+exports.unsuspendUser = async (req, res) => {
+  const { userId } = req.body
+  try {
+    await User.findByIdAndUpdate(userId, { suspended: false })
+    res.status(200).json({ message: 'User unsuspended successfully' })
+  } catch (error) {
+    res.status(500).send('Error unsuspending user')
   }
 }
 
 exports.deleteUser = async (req, res) => {
   const { userId } = req.params
   await User.findByIdAndDelete(userId)
-  res.send('User deleted')
+  res.status(200).json({ message: 'User deleted successfully' })
 }
 
 exports.getDashboardStats = async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments()
-    const onlineUsers = await User.countDocuments({ online: true }) // Assuming there's a field to track online status
-    res.json({ totalUsers, onlineUsers })
+    const totalUsers = await User.countDocuments({ role: 'user' })
+    const onlineUsers = await User.countDocuments({ online: true })
+    const suspendedUsers = await User.countDocuments({ suspended: true })
+    const totalPosts = await Post.countDocuments()
+    res.status(200).json({
+      users: totalUsers,
+      online_users: onlineUsers,
+      suspendedUsers: suspendedUsers,
+      posts: totalPosts,
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
