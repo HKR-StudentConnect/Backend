@@ -172,9 +172,16 @@ exports.deleteUser = async (req, res) => {
 
 exports.getDashboardStats = async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments()
-    const onlineUsers = await User.countDocuments({ online: true }) // Assuming there's a field to track online status
-    res.json({ totalUsers, onlineUsers })
+    const totalUsers = await User.countDocuments({ role: 'user' })
+    const onlineUsers = await User.countDocuments({ online: true })
+    const suspendedUsers = await User.countDocuments({ suspended: true })
+    const totalPosts = await Post.countDocuments()
+    res.status(200).json({
+      users: totalUsers,
+      online_users: onlineUsers,
+      suspendedUsers: suspendedUsers,
+      posts: totalPosts,
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

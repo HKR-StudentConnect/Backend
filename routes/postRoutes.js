@@ -10,9 +10,11 @@ const {
   addComment,
   removeComment,
   getUserPosts,
+  getAllPosts,
 } = require('../controllers/postController')
-const { verifyToken } = require('../middleware/auth')
+const { verifyToken, admin } = require('../middleware/auth')
 
+router.get('/', verifyToken, admin, getAllPosts)
 router.get('/user/:userId', getUserPosts)
 router.get('/:postId', getPost)
 router.post('/', verifyToken, createPost)
