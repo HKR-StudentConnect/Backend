@@ -1,5 +1,13 @@
 # StudentConnect Backend
 
+
+Backend part for the studentconnect HKR you can start y regestring your self to our database. 
+
+ensure to have .env file with connection URI for the mongodb and list down the port you have used as well as the JASON WEB TOKEN in the following .env file
+
+
+
+BELOW you can find the instructions to run the backend
 ## Run Locally
 
 Clone the project (Github CLI)
@@ -23,7 +31,7 @@ Install dependencies
 Create .env file in the root folder:
 
 ```bash
-  PORT=8000
+  PORT=5000
 ```
 
 Start the server
