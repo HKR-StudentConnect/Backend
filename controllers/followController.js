@@ -1,4 +1,5 @@
 const User = require('../models/users')
+const Notification = require('../models/notifications')
 
 exports.getUserFollowers = async (req, res) => {
   try {
@@ -33,14 +34,29 @@ exports.followUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
+    let followed = false
+
     if (!user.follows.includes(followeeId)) {
       user.follows.push(followeeId)
       await user.save()
+      followed = true
     }
 
     if (!followee.followers.includes(userId)) {
       followee.followers.push(userId)
       await followee.save()
+      followed = true
+    }
+
+    if (followed) {
+      // Send follow notification
+      const newNotification = new Notification({
+        recipient: followeeId,
+        sender: userId,
+        type: 'follow',
+      })
+
+      await newNotification.save()
     }
 
     res.status(200).json(followee._id)
