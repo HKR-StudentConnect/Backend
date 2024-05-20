@@ -16,8 +16,8 @@ const eventRoutes = require('./routes/eventRoutes')
 
 dotenv.config()
 const app = express()
-const server = http.createServer(app)
-const io = new Server(server)
+// const server = http.createServer(app)
+// const io = new Server(server)
 
 app.use(helmet())
 app.use(cors())
@@ -33,28 +33,28 @@ app.use('/notifications', notificationRoutes)
 app.use('/events', eventRoutes)
 
 // Socket.io for real-time chat
-io.on('connection', socket => {
-  console.log('User connected:', socket.id)
+// io.on('connection', socket => {
+//   console.log('User connected:', socket.id)
 
-  socket.on('go-online', userId => {
-    socket.join(userId)
-    User.findByIdAndUpdate(userId, { onlineStatus: true }, err => {
-      if (err) console.log('Error setting user online:', err)
-      io.emit('user-online', userId)
-    })
-  })
+//   socket.on('go-online', userId => {
+//     socket.join(userId)
+//     User.findByIdAndUpdate(userId, { onlineStatus: true }, err => {
+//       if (err) console.log('Error setting user online:', err)
+//       io.emit('user-online', userId)
+//     })
+//   })
 
-  socket.on('send-message', message => {
-    const { senderId, receiverId, text } = message
-    io.to(receiverId).emit('receive-message', { senderId, text })
-    // saving the message here via chatController
-  })
+//   socket.on('send-message', message => {
+//     const { senderId, receiverId, text } = message
+//     io.to(receiverId).emit('receive-message', { senderId, text })
+//     // saving the message here via chatController
+//   })
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id)
-    // Optionally, set user offline in the database
-  })
-})
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected:', socket.id)
+//     // Optionally, set user offline in the database
+//   })
+// })
 
 app.get('/', (req, res) => {
   res.send('Welcome to StudentConnect!!')
