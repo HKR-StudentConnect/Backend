@@ -11,7 +11,8 @@ const postRoutes = require('./routes/postRoutes')
 const chatRoutes = require('./routes/chatRoutes')
 const User = require('./models/users')
 const adminRoutes = require('./routes/adminRoutes')
-const notificationRoutes = require('./routes/notifications')
+const notificationRoutes = require('./routes/notificationsRoutes')
+const eventRoutes = require('./routes/eventRoutes')
 
 dotenv.config()
 const app = express()
@@ -29,6 +30,7 @@ app.use('/posts', postRoutes)
 app.use('/chat', chatRoutes)
 app.use('/admin', adminRoutes)
 app.use('/notifications', notificationRoutes)
+app.use('/events', eventRoutes)
 
 // Socket.io for real-time chat
 io.on('connection', socket => {
