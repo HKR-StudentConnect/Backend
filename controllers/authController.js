@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
     await newUser.save()
     res.status(201).json({ message: 'User registered successfully' })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -22,12 +22,16 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ email })
     if (!user) {
-      return res.status(404).send('User not found')
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    if (user.suspended) {
+      return res.status(403).json({ message: 'Your account is suspended' })
     }
 
     const isMatch = await bcrypt.compare(password, user.hashedPassword)
     if (!isMatch) {
-      return res.status(400).send('Invalid credentials')
+      return res.status(400).json({ message: 'Invalid credentials' })
     }
 
     const token = jwt.sign(
@@ -35,9 +39,9 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )
-    res.json({ userId: user._id, token: token })
+    res.status(200).json({ userId: user._id, token: token })
   } catch (error) {
     console.error('Login error for user:', email, error)
-    res.status(500).send(error.message)
+    res.status(500).send({ message: error.message })
   }
 }
