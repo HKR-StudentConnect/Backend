@@ -4,11 +4,11 @@ const {
   getUserProfile,
   updateUserProfile,
   createUserProfile,
-  deleteUserProfile,
   getUsersByUsername,
   getUserFollowsPosts,
   getPublicUserById,
   getAllUsers,
+  deleteUser,
 } = require('../controllers/userController')
 const {
   getUserFollowers,
@@ -22,7 +22,7 @@ router.get('/', verifyToken, admin, getAllUsers)
 router.post('/', verifyToken, createUserProfile) // Create a new user profile
 router.get('/:userId', verifyToken, getUserProfile) // Get a specific user profile
 router.put('/:userId', verifyToken, updateUserProfile) // Update a specific user profile
-router.delete('/:userId', verifyToken, deleteUserProfile) // Delete a specific user profile
+router.delete('/:userId', verifyToken, deleteUser) // Delete a specific user profile
 
 router.get('/public/:userId', getPublicUserById)
 

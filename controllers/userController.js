@@ -104,6 +104,54 @@ exports.deleteUserProfile = async (req, res) => {
   }
 }
 
+exports.deleteUser = async (req, res) => {
+  const { userId } = req.params
+
+  try {
+    // Find and delete the user
+    const user = await User.findByIdAndDelete(userId)
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Delete all posts by the user
+    await Post.deleteMany({ authorId: userId })
+
+    // Delete all notifications sent to or from the user
+    await Notification.deleteMany({
+      $or: [{ recipient: userId }, { sender: userId }],
+    })
+
+    // Remove the user's ID from other users' follows and followers
+    await User.updateMany({ follows: userId }, { $pull: { follows: userId } })
+
+    await User.updateMany(
+      { followers: userId },
+      { $pull: { followers: userId } }
+    )
+
+    // Remove the user's ID from any post likes and comments
+    await Post.updateMany(
+      { 'likes.userId': userId },
+      { $pull: { likes: { userId: userId } } }
+    )
+
+    await Post.updateMany(
+      { 'comments.userId': userId },
+      { $pull: { comments: { userId: userId } } }
+    )
+
+    res
+      .status(200)
+      .json({ message: 'User and all related data deleted successfully' })
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Internal server error', error: error.message })
+  }
+}
+
 exports.getUsersByUsername = async (req, res) => {
   try {
     const query = req.query.username
