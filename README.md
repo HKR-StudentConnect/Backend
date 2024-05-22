@@ -1,9 +1,9 @@
 # StudentConnect Backend
 
 
-Backend part for the studentconnect HKR you can start y regestring your self to our database. 
+Backend part for the studentconnect HKR you can start by regestring your self to our database. 
 
-ensure to have .env file with connection URI for the mongodb and list down the port you have used as well as the JASON WEB TOKEN in the following .env file
+Ensure to have .env file with connection URI for the MongoDB and list down the port you have used as well as the JASON WEB TOKEN(JWT) in the following .env file
 
 
 
