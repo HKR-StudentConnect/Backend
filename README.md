@@ -1,43 +1,26 @@
-# Frontend for HKR-StudentConnect
+# StudentConnect Backend
 
 
-link to netlify: 
-``` bash
-https://studentconnecthkr.netlify.app/
+Backend part for the studentconnect HKR you can start y regestring your self to our database. 
 
-```
+ensure to have .env file with connection URI for the mongodb and list down the port you have used as well as the JASON WEB TOKEN in the following .env file
 
-**Project Overview**
 
-HKR-StudentConnect is a React-based social media application designed to foster a vibrant online community for students at HKR. It empowers users to connect, share ideas, and engage with each other's content.
 
-**Core Functionalities**
+BELOW you can find the instructions to run the backend
+## Run Locally
 
-- **User Management:** Secure registration, login, and profile management with optional profile pictures.
-- **Content Creation and Interaction:** Share posts, like, and comment on content to spark meaningful conversations and interactions.
-- **Social Connections:** Build your network by sending and accepting friend requests, and view your friends' posts in a dedicated feed.
-- **Real-Time Notifications:** Stay up-to-date on friend requests, likes, and comments on your posts.
-- **Search Functionality:** Easily find other users by name or username to expand your network.
-
-**Robust Admin Panel (`/admin`)**
-
-For authorized administrators, a comprehensive admin panel provides control over the platform:
-
-- **User Management:** View, edit, or delete user accounts for efficient user management.
-- **Content Moderation:** Maintain a positive user experience by moderating posts, comments, and other user-generated content.
-- **Data-Driven Insights:** Gain valuable analytics and insights on user activity, engagement metrics, and platform performance to inform strategic decision-making.
-
-## Installation
-
-To run this project locally, follow these steps:
-
-1. Clone the repository to your local machine:
+Clone the project (Github CLI)
 
 ```bash
-https://github.com/HKR-StudentConnect/frontend.git
- ```
+  gh repo clone HKR-StudentConnect/Backend
+```
 
-Go the project folder
+Go to the project directory
+
+```bash
+  cd Backend
+```
 
 Install dependencies
 
@@ -45,7 +28,11 @@ Install dependencies
   npm install
 ```
 
-create an .env file 
+Create .env file in the root folder:
+
+```bash
+  PORT=5000
+```
 
 Start the server
 
