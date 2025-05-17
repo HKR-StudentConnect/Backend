@@ -1,4 +1,4 @@
-# StudentConnect Backend
+# StudentConnect HKR Backend
 
 
 Backend part for the studentconnect HKR you can start by regestring your self to our database. 
